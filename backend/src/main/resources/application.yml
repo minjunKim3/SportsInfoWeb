@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    # 파일 기반 H2 — 앱을 재시작해도 수집한 데이터가 유지된다.
+    # 나중에 배포할 때 PostgreSQL 등으로 교체 예정.
+    url: jdbc:h2:file:./data/sportsinfo
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # 개발 단계: 엔티티 변경 시 테이블 자동 반영
+    open-in-view: false
+
+  h2:
+    console:
+      enabled: true      # http://localhost:8080/h2-console 에서 DB 직접 확인 가능
+      path: /h2-console
+
+naver:
+  sports:
+    base-url: https://api-gw.sports.naver.com
+    # 수집할 종목 (네이버 upperCategoryId 기준)
+    categories:
+      - kbaseball   # 국내야구 (KBO)
+      - wbaseball   # 해외야구 (MLB 등)
+      - kfootball   # 국내축구 (K리그)
+      - wfootball   # 해외축구 (EPL, 라리가 등)
+      - basketball  # 농구 (KBL, NBA)
+      - volleyball  # 배구 (V리그)
+      - esports     # e스포츠 (LCK 등)
+
+logging:
+  level:
+    com.sportsinfo.backend: debug

@@ -1,0 +1,18 @@
+# 로컬 H2 데이터베이스 파일 (수집 데이터는 커밋하지 않는다)
+backend/data/
+
+# Gradle
+backend/.gradle/
+backend/build/
+
+# Node (frontend 추가 시)
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store
