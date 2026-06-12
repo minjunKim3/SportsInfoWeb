@@ -5,8 +5,12 @@ backend/data/
 backend/.gradle/
 backend/build/
 
-# Node (frontend 추가 시)
+# Node
 node_modules/
+frontend/dist/
+
+# 로컬 도구 설정
+.claude/
 
 # IDE
 .idea/
