@@ -24,6 +24,7 @@ naver:
   sports:
     base-url: https://api-gw.sports.naver.com
     # 수집할 종목 (네이버 upperCategoryId 기준)
+    # e스포츠는 이 일정 API에 없고 별도 페이지를 쓰므로 esports-schedule-url로 따로 수집한다.
     categories:
       - kbaseball   # 국내야구 (KBO)
       - wbaseball   # 해외야구 (MLB 등)
@@ -31,7 +32,8 @@ naver:
       - wfootball   # 해외축구 (EPL, 라리가 등)
       - basketball  # 농구 (KBL, NBA)
       - volleyball  # 배구 (V리그)
-      - esports     # e스포츠 (LCK 등)
+    # e스포츠 일정 페이지 (LCK 등). __NEXT_DATA__에서 경기를 추출한다.
+    esports-schedule-url: https://game.naver.com/esports/schedule
 
 # 리그(categoryId)별 한국 중계 채널 표.
 # 네이버가 broadChannel을 주지 않는 경기(MLB, NPB 등)의 중계 정보를 코드로 결정적으로 채운다.

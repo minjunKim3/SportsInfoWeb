@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "naver.sports")
 public record NaverSportsProperties(
         String baseUrl,
-        List<String> categories
+        List<String> categories,
+        String esportsScheduleUrl
 ) {
 }
