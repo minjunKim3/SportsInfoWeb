@@ -33,6 +33,48 @@ naver:
       - volleyball  # 배구 (V리그)
       - esports     # e스포츠 (LCK 등)
 
+# 리그(categoryId)별 한국 중계 채널 표.
+# 네이버가 broadChannel을 주지 않는 경기(MLB, NPB 등)의 중계 정보를 코드로 결정적으로 채운다.
+# 중계권은 시즌마다 바뀌므로 여기만 갱신하면 됨 (2026 시즌 기준 best-effort).
+broadcast:
+  rights:
+    kbo:
+      channels: [KBS N SPORTS, MBC SPORTS+, SBS SPORTS, SPOTV]
+      note: 경기별 분배
+    mlb:
+      channels: [SPOTV, 쿠팡플레이]
+    npb:
+      channels: [SPOTV]
+    worldcup:
+      channels: [KBS, MBC, SBS]
+      note: 국가대표 경기 지상파 중계
+    epl:
+      channels: [쿠팡플레이]
+      note: 쿠팡플레이 독점
+    laliga:
+      channels: [쿠팡플레이]
+    bundesliga:
+      channels: [쿠팡플레이]
+    seriea:
+      channels: [쿠팡플레이]
+    ligue1:
+      channels: [쿠팡플레이]
+    championsleague:
+      channels: [쿠팡플레이]
+      note: UEFA 챔피언스리그
+    kleague:
+      channels: [쿠팡플레이, SPOTV]
+    nba:
+      channels: [SPOTV, 쿠팡플레이]
+    kbl:
+      channels: [SPOTV]
+    vleague:
+      channels: [SBS SPORTS, KBS N SPORTS]
+      note: V리그
+    lck:
+      channels: [네이버, 치지직, SOOP]
+      note: LoL 챔피언스 코리아
+
 logging:
   level:
     com.sportsinfo.backend: debug
