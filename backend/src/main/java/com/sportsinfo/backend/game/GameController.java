@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sportsinfo.backend.broadcast.BroadcastInfo;
+import com.sportsinfo.backend.broadcast.BroadcastResolver;
 import com.sportsinfo.backend.sync.GameSyncService;
 
 @RestController
@@ -19,15 +21,19 @@ public class GameController {
 
     private final GameRepository gameRepository;
     private final GameSyncService gameSyncService;
+    private final BroadcastResolver broadcastResolver;
 
-    public GameController(GameRepository gameRepository, GameSyncService gameSyncService) {
+    public GameController(GameRepository gameRepository, GameSyncService gameSyncService,
+                          BroadcastResolver broadcastResolver) {
         this.gameRepository = gameRepository;
         this.gameSyncService = gameSyncService;
+        this.broadcastResolver = broadcastResolver;
     }
 
     /**
      * 하루치 경기 조회. 기본은 오늘.
-     * broadcastOnly=true면 한국어 중계 채널이 잡혀 있는 경기만 내려준다.
+     * 각 경기의 중계 정보는 여기서 해석해(BroadcastResolver) DTO에 담는다.
+     * broadcastOnly=true면 한국어 중계가 있는 것으로 판단된 경기만 내려준다.
      */
     @GetMapping("/games")
     public List<GameDto> getGames(
@@ -37,8 +43,8 @@ public class GameController {
         LocalDate targetDate = (date != null) ? date : LocalDate.now();
 
         return gameRepository.findByGameDateOrderByGameDateTimeAsc(targetDate).stream()
-                .filter(game -> !broadcastOnly || game.hasBroadcast())
-                .map(GameDto::from)
+                .map(game -> GameDto.from(game, broadcastResolver.resolve(game)))
+                .filter(dto -> !broadcastOnly || dto.broadcast().available())
                 .toList();
     }
 

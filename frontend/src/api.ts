@@ -16,7 +16,18 @@ export interface Game {
   statusCode: 'BEFORE' | 'STARTED' | 'RESULT' | string
   statusInfo: string | null
   cancelled: boolean
-  broadChannel: string | null
+  broadcast: BroadcastInfo
+}
+
+// 중계 정보. source로 신뢰도를 구분한다.
+//  - NAVER: 네이버 편성 (확정)
+//  - KNOWN_RIGHTS: 리그별 중계권 표로 추정
+//  - UNKNOWN: 아직 모름
+export interface BroadcastInfo {
+  available: boolean
+  channels: string[]
+  source: 'NAVER' | 'KNOWN_RIGHTS' | 'UNKNOWN'
+  note: string | null
 }
 
 export async function fetchGames(date: string, broadcastOnly: boolean): Promise<Game[]> {
