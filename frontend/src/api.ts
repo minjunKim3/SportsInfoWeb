@@ -38,3 +38,27 @@ export async function fetchGames(date: string, broadcastOnly: boolean): Promise<
   }
   return response.json()
 }
+
+export interface AnalysisSource {
+  title: string | null
+  uri: string
+}
+
+export interface GameAnalysis {
+  gameId: string
+  analysisMarkdown: string
+  sources: AnalysisSource[]
+  createdAt: string
+  cached: boolean
+}
+
+// 경기 볼 가치 분석. 웹검색 기반이라 수십 초 걸릴 수 있다.
+export async function fetchAnalysis(gameId: string, refresh = false): Promise<GameAnalysis> {
+  const params = new URLSearchParams({ refresh: String(refresh) })
+  const response = await fetch(`/api/games/${gameId}/analysis?${params}`, { method: 'POST' })
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.error ?? `분석에 실패했어요 (HTTP ${response.status})`)
+  }
+  return response.json()
+}
