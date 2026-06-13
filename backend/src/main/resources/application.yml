@@ -77,6 +77,16 @@ broadcast:
       channels: [네이버, 치지직, SOOP]
       note: LoL 챔피언스 코리아
 
+# Gemini(무료 등급) 경기 분석 설정.
+# 웹검색(Google Search grounding)을 켜서 실제 최신 정보 기반으로 분석한다.
+# API 키는 코드에 두지 않고 환경변수 GEMINI_API_KEY로 주입한다(보안).
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  base-url: https://generativelanguage.googleapis.com/v1beta
+  # 무료 등급에서 웹검색 grounding이 가능한 Flash 계열 모델.
+  # 모델 ID가 바뀌면 이 줄만 수정하면 된다.
+  model: gemini-2.5-flash
+
 logging:
   level:
     com.sportsinfo.backend: debug

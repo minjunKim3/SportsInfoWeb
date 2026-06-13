@@ -8,6 +8,7 @@ backend/build/
 # Node
 node_modules/
 frontend/dist/
+frontend/.vite/
 
 # 로컬 도구 설정
 .claude/

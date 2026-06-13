@@ -1,4 +1,5 @@
 import type { Game } from './api'
+import { AnalysisPanel } from './AnalysisPanel'
 
 function formatTime(dateTime: string): string {
   const time = dateTime.split('T')[1] ?? ''
@@ -80,6 +81,8 @@ export function GameCard({ game }: { game: Game }) {
           )}
         </div>
       )}
+
+      {isTeamMatch && <AnalysisPanel gameId={game.gameId} />}
     </article>
   )
 }
