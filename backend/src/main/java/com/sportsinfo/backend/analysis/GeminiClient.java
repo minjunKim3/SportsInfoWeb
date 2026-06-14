@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,14 +38,24 @@ public class GeminiClient {
                 List.of(new Content(List.of(new Part(prompt)))),
                 List.of(new Tool(new GoogleSearch())));
 
-        GeminiResponse response = restClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/models/{model}:generateContent")
-                        .queryParam("key", properties.apiKey())
-                        .build(properties.model()))
-                .body(request)
-                .retrieve()
-                .body(GeminiResponse.class);
+        GeminiResponse response;
+        try {
+            response = restClient.post()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/models/{model}:generateContent")
+                            .queryParam("key", properties.apiKey())
+                            .build(properties.model()))
+                    .body(request)
+                    .retrieve()
+                    .body(GeminiResponse.class);
+        } catch (RestClientResponseException e) {
+            // 429: 무료 quota 초과 → 사용자에게 안내 (서버 에러 아님)
+            if (e.getStatusCode().value() == 429) {
+                throw new QuotaExceededException(
+                        "오늘의 무료 분석 한도를 다 썼어요. 잠시 후(또는 내일) 다시 시도해주세요.");
+            }
+            throw new IllegalStateException("분석 요청이 실패했어요 (Gemini " + e.getStatusCode().value() + ").");
+        }
 
         if (response == null || response.candidates() == null || response.candidates().isEmpty()) {
             return new Result("분석 결과를 받지 못했어요. 잠시 후 다시 시도해주세요.", List.of());

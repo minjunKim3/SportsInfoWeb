@@ -40,4 +40,9 @@ public class GameAnalysisController {
     public ResponseEntity<Map<String, String>> handleNotConfigured(IllegalStateException e) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("error", e.getMessage()));
     }
+
+    @ExceptionHandler(QuotaExceededException.class)
+    public ResponseEntity<Map<String, String>> handleQuota(QuotaExceededException e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("error", e.getMessage()));
+    }
 }
