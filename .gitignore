@@ -10,6 +10,9 @@ node_modules/
 frontend/dist/
 frontend/.vite/
 
+# 프론트 빌드 결과물(백엔드가 서빙) — 런처가 필요 시 자동 빌드
+backend/src/main/resources/static/
+
 # 로컬 도구 설정
 .claude/
 
