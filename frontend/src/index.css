@@ -215,6 +215,18 @@ body {
   padding: 1px 8px;
 }
 
+.category-title .live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fda4af;
+  background: color-mix(in srgb, var(--live) 15%, transparent);
+  border-radius: 99px;
+  padding: 2px 9px;
+}
+
 .games {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));

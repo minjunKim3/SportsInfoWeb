@@ -64,14 +64,25 @@ export default function App() {
   // 선택한 카테고리가 오늘 목록에 없으면 자동으로 '전체'로 간주.
   const activeCategory = category && categories.some((c) => c.name === category) ? category : null
 
-  // 같은 리그끼리 묶은 섹션. 선택된 카테고리만 보여준다.
+  // 같은 리그끼리 묶은 섹션. 선택된 카테고리만 보여주고,
+  // 진행 중(LIVE) 경기를 섹션 안에서도, 리그 순서에서도 위로 끌어올린다.
   const sections = useMemo(() => {
+    const isLive = (g: Game) => g.statusCode === 'STARTED'
     const grouped = new Map<string, Game[]>()
     for (const game of games) {
       const key = game.categoryName || '기타'
       grouped.set(key, [...(grouped.get(key) ?? []), game])
     }
-    return [...grouped.entries()].filter(([name]) => !activeCategory || name === activeCategory)
+    return [...grouped.entries()]
+      .filter(([name]) => !activeCategory || name === activeCategory)
+      .map(([name, list]) => ({
+        name,
+        // 진행 중 경기를 맨 위로 (나머지는 기존 시간순 유지 — sort는 안정 정렬)
+        list: [...list].sort((a, b) => Number(isLive(b)) - Number(isLive(a))),
+        liveCount: list.filter(isLive).length,
+      }))
+      // 진행 중 경기가 있는 리그를 먼저 (그 외엔 기존 순서 유지)
+      .sort((a, b) => (b.liveCount > 0 ? 1 : 0) - (a.liveCount > 0 ? 1 : 0))
   }, [games, activeCategory])
 
   const liveCount = games.filter((g) => g.statusCode === 'STARTED').length
@@ -136,13 +147,14 @@ export default function App() {
         <div className="message">이 날짜에 수집된 경기가 없어요.</div>
       )}
 
-      {sections.map(([categoryName, sectionGames]) => (
-        <section key={categoryName} className="category">
+      {sections.map(({ name, list, liveCount }) => (
+        <section key={name} className="category">
           <h2 className="category-title">
-            {categoryName} <span className="count">{sectionGames.length}</span>
+            {name} <span className="count">{list.length}</span>
+            {liveCount > 0 && <span className="live-tag"><span className="live-dot" />LIVE</span>}
           </h2>
           <div className="games">
-            {sectionGames.map((game) => (
+            {list.map((game) => (
               <GameCard key={game.gameId} game={game} />
             ))}
           </div>
