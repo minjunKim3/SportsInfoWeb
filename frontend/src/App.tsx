@@ -21,6 +21,7 @@ export default function App() {
   const today = toDateString(new Date())
   const [date, setDate] = useState(today)
   const [broadcastOnly, setBroadcastOnly] = useState(false)
+  const [category, setCategory] = useState<string | null>(null) // null = 전체
   const [games, setGames] = useState<Game[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -50,15 +51,28 @@ export default function App() {
     setDate(toDateString(new Date(year, month - 1, day + offset)))
   }
 
-  // 같은 리그(categoryName)끼리 묶어서 섹션으로 보여준다.
+  // 카테고리(리그)별 경기 수 — 칩으로 보여준다. 등장 순서 유지.
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const game of games) {
+      const key = game.categoryName || '기타'
+      counts.set(key, (counts.get(key) ?? 0) + 1)
+    }
+    return [...counts.entries()].map(([name, count]) => ({ name, count }))
+  }, [games])
+
+  // 선택한 카테고리가 오늘 목록에 없으면 자동으로 '전체'로 간주.
+  const activeCategory = category && categories.some((c) => c.name === category) ? category : null
+
+  // 같은 리그끼리 묶은 섹션. 선택된 카테고리만 보여준다.
   const sections = useMemo(() => {
     const grouped = new Map<string, Game[]>()
     for (const game of games) {
       const key = game.categoryName || '기타'
       grouped.set(key, [...(grouped.get(key) ?? []), game])
     }
-    return [...grouped.entries()]
-  }, [games])
+    return [...grouped.entries()].filter(([name]) => !activeCategory || name === activeCategory)
+  }, [games, activeCategory])
 
   const liveCount = games.filter((g) => g.statusCode === 'STARTED').length
 
@@ -89,6 +103,26 @@ export default function App() {
           중계 있는 경기만
         </label>
       </div>
+
+      {categories.length > 0 && (
+        <div className="category-tabs">
+          <button
+            className={`cat-chip ${activeCategory === null ? 'active' : ''}`}
+            onClick={() => setCategory(null)}
+          >
+            전체 <span className="chip-count">{games.length}</span>
+          </button>
+          {categories.map(({ name, count }) => (
+            <button
+              key={name}
+              className={`cat-chip ${activeCategory === name ? 'active' : ''}`}
+              onClick={() => setCategory(name)}
+            >
+              {name} <span className="chip-count">{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {liveCount > 0 && (
         <div className="live-banner">
