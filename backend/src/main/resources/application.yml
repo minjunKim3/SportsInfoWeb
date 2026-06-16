@@ -85,8 +85,9 @@ gemini:
   base-url: https://generativelanguage.googleapis.com/v1beta
   # 무료 등급에서 웹검색 grounding이 가능한 Flash 계열 모델.
   # 모델 ID가 바뀌면 이 줄만 수정하면 된다.
-  # (Pro 모델은 2026-04 이후 API 무료 등급 제외라 Flash를 쓴다.)
-  model: gemini-3.5-flash
+  # 주의: 3.5-flash는 무료 등급에서 "웹검색 grounding" quota가 막혀 429가 난다(2026-06 확인).
+  #       2.5-flash는 grounding 무료 quota(일 1,500회)가 살아있어 우리 용도엔 2.5가 맞다.
+  model: gemini-2.5-flash
 
 logging:
   level:
