@@ -44,9 +44,17 @@ export interface AnalysisSource {
   uri: string
 }
 
+export interface AnalysisSection {
+  title: string
+  content: string
+}
+
 export interface GameAnalysis {
   gameId: string
-  analysisMarkdown: string
+  meetsThreshold: boolean
+  verdict: string
+  expectedViewers: string
+  sections: AnalysisSection[]
   sources: AnalysisSource[]
   createdAt: string
   cached: boolean

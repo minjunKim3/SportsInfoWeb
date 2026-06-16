@@ -411,38 +411,123 @@ body {
   align-items: flex-start;
 }
 
-.analysis-body {
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--text);
-  word-break: keep-all;
+/* 요약 (항상 보임) */
+.analysis-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.analysis-body h3 {
-  font-size: 14.5px;
-  margin: 14px 0 6px;
+.verdict {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.verdict.yes {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.verdict.no {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+}
+
+.verdict-mark {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.verdict.yes .verdict-mark {
   color: var(--accent);
 }
 
-.analysis-body h3:first-child {
-  margin-top: 0;
+.verdict-line {
+  font-size: 13px;
+  color: var(--text-dim);
 }
 
-.analysis-body p {
+.viewers {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0 2px;
+}
+
+/* 아코디언 (클릭해서 펼침) */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acc-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.acc-item.open {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
+.acc-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--surface-hover);
+  color: var(--text);
+  border: none;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.acc-header:hover {
+  color: var(--accent);
+}
+
+.acc-arrow {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.acc-body {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text);
+  word-break: keep-all;
+  padding: 10px 12px;
+}
+
+.acc-body p {
   margin: 6px 0;
 }
 
-.analysis-body ul,
-.analysis-body ol {
+.acc-body p:first-child {
+  margin-top: 0;
+}
+
+.acc-body ul,
+.acc-body ol {
   margin: 6px 0;
   padding-left: 20px;
 }
 
-.analysis-body li {
+.acc-body li {
   margin: 3px 0;
 }
 
-.analysis-body strong {
+.acc-body strong {
   color: #fde68a;
 }
 

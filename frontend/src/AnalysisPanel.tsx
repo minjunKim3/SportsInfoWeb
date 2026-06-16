@@ -12,10 +12,12 @@ export function AnalysisPanel({ gameId }: { gameId: string }) {
   const [result, setResult] = useState<GameAnalysis | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState<Record<number, boolean>>({})
 
   const run = async (refresh: boolean) => {
     setLoading(true)
     setError(null)
+    setOpen({})
     try {
       setResult(await fetchAnalysis(gameId, refresh))
     } catch (e) {
@@ -24,6 +26,8 @@ export function AnalysisPanel({ gameId }: { gameId: string }) {
       setLoading(false)
     }
   }
+
+  const toggle = (i: number) => setOpen((prev) => ({ ...prev, [i]: !prev[i] }))
 
   if (!result && !loading && !error) {
     return (
@@ -50,10 +54,34 @@ export function AnalysisPanel({ gameId }: { gameId: string }) {
 
       {result && !loading && (
         <>
-          <div
-            className="analysis-body"
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(result.analysisMarkdown) }}
-          />
+          {/* 요약: 충족 여부 + 예상 시청자 (항상 보임) */}
+          <div className="analysis-summary">
+            <div className={`verdict ${result.meetsThreshold ? 'yes' : 'no'}`}>
+              <span className="verdict-mark">{result.meetsThreshold ? '✅ 볼 만한 경기' : '➖ 상위권은 아님'}</span>
+              {result.verdict && <span className="verdict-line">{result.verdict}</span>}
+            </div>
+            {result.expectedViewers && (
+              <div className="viewers">👀 {result.expectedViewers}</div>
+            )}
+          </div>
+
+          {/* 상세: 항목별 아코디언 (클릭해서 펼침) */}
+          <div className="accordion">
+            {result.sections.map((s, i) => (
+              <div className={`acc-item ${open[i] ? 'open' : ''}`} key={i}>
+                <button className="acc-header" onClick={() => toggle(i)}>
+                  <span>{s.title}</span>
+                  <span className="acc-arrow">{open[i] ? '▾' : '▸'}</span>
+                </button>
+                {open[i] && (
+                  <div
+                    className="acc-body"
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(s.content) }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
 
           {result.sources.length > 0 && (
             <div className="analysis-sources">
