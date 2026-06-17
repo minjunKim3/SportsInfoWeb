@@ -69,13 +69,14 @@ public class GameAnalysisService {
             return new GameAnalysisDto(
                     gameId,
                     Boolean.TRUE.equals(p.meetsThreshold()),
+                    nullToEmpty(p.koreanBroadcast()),
                     nullToEmpty(p.verdict()),
                     nullToEmpty(p.expectedViewers()),
                     p.sections() != null ? p.sections() : List.of(),
                     sources, createdAt, cached);
         } catch (Exception e) {
             // 파싱 실패(옛 형식/형식 오류) → 원문을 그대로 한 섹션에 담아 보여준다.
-            return new GameAnalysisDto(gameId, false, "분석 결과", "",
+            return new GameAnalysisDto(gameId, false, "", "분석 결과", "",
                     List.of(new Section("분석", rawText)), sources, createdAt, cached);
         }
     }
@@ -116,6 +117,7 @@ public class GameAnalysisService {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private record ParsedAnalysis(
             Boolean meetsThreshold,
+            String koreanBroadcast,
             String verdict,
             String expectedViewers,
             List<Section> sections

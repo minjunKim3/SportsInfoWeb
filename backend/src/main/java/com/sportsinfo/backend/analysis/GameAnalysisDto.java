@@ -9,6 +9,7 @@ import com.sportsinfo.backend.analysis.GeminiClient.Source;
 public record GameAnalysisDto(
         String gameId,
         boolean meetsThreshold,
+        String koreanBroadcast,
         String verdict,
         String expectedViewers,
         List<Section> sections,

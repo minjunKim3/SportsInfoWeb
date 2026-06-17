@@ -73,15 +73,6 @@ export function GameCard({ game }: { game: Game }) {
         <p className="content-title">{game.title || '경기 정보 없음'}</p>
       )}
 
-      {game.broadcast.available && (
-        <div className="channel">
-          📺 {game.broadcast.channels.join(', ')}
-          {game.broadcast.source === 'KNOWN_RIGHTS' && (
-            <span className="channel-badge" title="리그별 중계권 정보로 추정한 채널이에요">추정</span>
-          )}
-        </div>
-      )}
-
       {isTeamMatch && <AnalysisPanel gameId={game.gameId} />}
     </article>
   )

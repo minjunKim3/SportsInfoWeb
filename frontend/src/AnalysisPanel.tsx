@@ -54,8 +54,11 @@ export function AnalysisPanel({ gameId }: { gameId: string }) {
 
       {result && !loading && (
         <>
-          {/* 요약: 충족 여부 + 예상 시청자 (항상 보임) */}
+          {/* 요약: 한국어 중계처 + 충족 여부 + 예상 시청자 (항상 보임) */}
           <div className="analysis-summary">
+            {result.koreanBroadcast && (
+              <div className="broadcast-where">📺 한국어 중계: <strong>{result.koreanBroadcast}</strong></div>
+            )}
             <div className={`verdict ${result.meetsThreshold ? 'yes' : 'no'}`}>
               <span className="verdict-mark">{result.meetsThreshold ? '✅ 볼 만한 경기' : '➖ 상위권은 아님'}</span>
               {result.verdict && <span className="verdict-line">{result.verdict}</span>}

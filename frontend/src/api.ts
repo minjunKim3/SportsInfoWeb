@@ -52,6 +52,7 @@ export interface AnalysisSection {
 export interface GameAnalysis {
   gameId: string
   meetsThreshold: boolean
+  koreanBroadcast: string
   verdict: string
   expectedViewers: string
   sections: AnalysisSection[]
